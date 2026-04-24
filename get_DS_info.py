@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
 
+# Script en Python que se conecta vía WLST a un weblogic y extrae en un CSV esta info:
+#     Nombre del DataSource
+#     Tipo (Generic, Gridlink)
+#     URL (cadena de conexión)
+#     Target (Cluster al que va asociado ese DataSource) 
+#     Probado con éxito en DataSources globales (no particionados) y en versiones de weblogic 10.3.x (11g), 12.1.x, 12.2.x y 14.1.1
+
 # ============================================
-# CONEXIÓN
+# CONEXION
 # ============================================
 
 connect('weblogic','password','t3://host:7001')
@@ -54,7 +61,7 @@ def getURL(dsName):
         return "N/A"
 
 # ============================================
-# EJECUCIÓN PRINCIPAL
+# EJECUCION PRINCIPAL
 # ============================================
 
 domainConfig()
@@ -66,7 +73,7 @@ print('======================================================')
 cd('/JDBCSystemResources')
 
 # CSV salida
-outputFile = '/tmp/datasources_report.csv'
+outputFile = '/tmp/DROIJALS/datasources_report.csv'
 f = open(outputFile, 'w')
 
 # Cabecera CSV
