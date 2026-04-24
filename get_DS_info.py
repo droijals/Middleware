@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Script en Python que se conecta vía WLST a un weblogic y extrae en un CSV esta info:
-#     Nombre del DataSource
-#     Tipo (Generic, Gridlink)
-#     URL (cadena de conexión)
-#     Target (Cluster al que va asociado ese DataSource) 
-#     Probado con éxito en DataSources globales (no particionados) y en versiones de weblogic 10.3.x (11g), 12.1.x, 12.2.x y 14.1.1
-
-
 # ============================================
 # CONEXIÓN
 # ============================================
@@ -28,22 +20,27 @@ def getTargets(dsBean):
     return ",".join(targets)
 
 def detectType(dsName):
-    try:
-        cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName)
-        if cmo.getJDBCDataSourceParams() is not None:
-            return "Generic"
-    except:
-        pass
 
+    # 1. GRIDLINK (prioridad máxima)
     try:
         cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName + '/JDBCOracleParams/' + dsName)
         return "GridLink"
     except:
         pass
 
+    # 2. MULTI DATASOURCE
     try:
         cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName + '/JDBCDataSourceParams/' + dsName)
-        return "MultiDataSource"
+        if cmo.getDataSourceList() is not None:
+            return "MultiDataSource"
+    except:
+        pass
+
+    # 3. GENERIC (fallback)
+    try:
+        cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName)
+        if cmo.getJDBCDataSourceParams() is not None:
+            return "Generic"
     except:
         pass
 
@@ -68,11 +65,11 @@ print('======================================================')
 
 cd('/JDBCSystemResources')
 
-# CSV output (SIN runtime)
+# CSV salida
 outputFile = '/tmp/datasources_report.csv'
 f = open(outputFile, 'w')
 
-# Encabezado SIN RuntimeTest
+# Cabecera CSV
 f.write('Name,Type,URL,Targets\n')
 
 for ds in cmo.getJDBCSystemResources():
@@ -83,14 +80,15 @@ for ds in cmo.getJDBCSystemResources():
     print('Datasource: ' + dsName)
 
     dsType = detectType(dsName)
-    url = getURL(dsName)
-    targets = getTargets(ds)
-
     print('Tipo: ' + dsType)
-    print('URL: ' + str(url))
-    print('Targets (Clusters): ' + targets)
 
-    # CSV SIN RuntimeTest
+    url = getURL(dsName)
+    print('URL: ' + str(url))
+
+    targets = getTargets(ds)
+    print('Targets: ' + targets)
+
+    # Escritura CSV
     f.write(dsName + ',' + dsType + ',' + str(url) + ',' + targets + '\n')
 
 f.close()
