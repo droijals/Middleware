@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Script en Python que se conecta vía WLST a un weblogic y extrae en un CSV esta info:
 #     Nombre del DataSource
 #     Tipo (Generic, Gridlink)
