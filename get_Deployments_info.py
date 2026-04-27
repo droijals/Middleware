@@ -5,7 +5,7 @@ import os
 connect('weblogic','password','t3://host:7001')
 
 OUTPUT_DIR  = '/tmp/DROIJALS'
-OUTPUT_FILE = OUTPUT_DIR + '/deployments.csv'
+OUTPUT_FILE = OUTPUT_DIR + '/deployments_report.csv'
 
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
