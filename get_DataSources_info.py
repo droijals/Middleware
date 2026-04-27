@@ -28,30 +28,27 @@ def getTargets(dsBean):
 
 def detectType(dsName):
 
-    # 1. GRIDLINK (prioridad máxima)
+    # 1. GRIDLINK (detección real)
     try:
         cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName + '/JDBCOracleParams/' + dsName)
-        return "GridLink"
+        
+        # Solo es GridLink si FAN está habilitado
+        if cmo.isFanEnabled():
+            return "GridLink"
     except:
         pass
 
     # 2. MULTI DATASOURCE
     try:
         cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName + '/JDBCDataSourceParams/' + dsName)
+        
         if cmo.getDataSourceList() is not None:
             return "MultiDataSource"
     except:
         pass
 
-    # 3. GENERIC (fallback)
-    try:
-        cd('/JDBCSystemResources/' + dsName + '/JDBCResource/' + dsName)
-        if cmo.getJDBCDataSourceParams() is not None:
-            return "Generic"
-    except:
-        pass
-
-    return "Unknown"
+    # 3. GENERIC (fallback real)
+    return "Generic"
 
 def getURL(dsName):
     try:
