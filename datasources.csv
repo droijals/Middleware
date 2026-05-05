@@ -1,0 +1,3 @@
+admin_url,username,password,datasource_name,new_url,target
+t3://host1:7001,weblogic,pass1,DS_APP_1,jdbc:oracle:thin:@hostnuevo:1521/ORCL,cluster1
+t3://host2:7001,weblogic,pass2,DS_APP_2,jdbc:oracle:thin:@hostnuevo:1521/ORCL,server1
